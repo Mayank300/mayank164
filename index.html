@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Shooting Game in Virtual Reality</title>
+    <title>Shooting Game in Virtual Reality</title>
+    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/n5ro/aframe-physics-system@v4.0.1/dist/aframe-physics-system.min.js"></script>
+    <script src="https://unpkg.com/aframe-environment-component@1.1.0/dist/aframe-environment-component.min.js"></script>
+    <script src="https://recast-api.donmccurdy.com/aframe-inspector-plugin-recast.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.min.js"></script>
+
+    <script src="./shoot.js"></script>
+    <script src="./gameObject.js"></script>
+    <script src="./playerMovement.js"></script>
+    <script src="./enemies.js"></script>
+  </head>
+  <body>
+    <a-scene id="scene" inspector-plugin-recast>
+      <!--Assets-->
+      <a-assets>
+        <a-assets-item id="collider" src="./navmesh.gltf"></a-assets-item>
+        <a-asset-item
+          id="shooter"
+          src="./models/shooter/gun.gltf"
+        ></a-asset-item>
+        <a-asset-item id="tank" src="./models/tank/scene.gltf"></a-asset-item>
+        <sound id="shoot-id" src="./sounds/shoot.mp3"></sound>
+        <sound id="foot-step" src="./sounds/footStep.mp3"></sound>
+      </a-assets>
+      <!---
+      <a-entity
+        id="navigation-mesh"
+        gltf-model="#collider"
+        visibility="false"
+        nav-mesh
+      >
+      </a-entity>
+     -->
+      <a-entity boxes fences> </a-entity>
+
+      <a-entity
+        id="environment"
+        environment="preset: egypt; skyType: gradient;"
+      >
+      </a-entity>
+
+      <a-entity
+        id="sound-1"
+        sound="src: #shoot-id; poolSize: 2; autoplay: false; volume: 0.8; loop: false"
+      >
+      </a-entity>
+
+      <a-entity
+        id="sound-2"
+        sound="src: #foot-step; poolSize: 2; autoplay: false; volume: 0.8; loop: false"
+      >
+      </a-entity>
+
+      <!--Light-->
+      <a-entity light="type: ambient; color: yellow; intensity:0.5"></a-entity>
+
+      <!--Camera and Cursor-->
+      <a-entity
+        id="parent-camera"
+        movement-controls="speed: 0.5; constrainToNavMesh: true"
+        position="0 1 2"
+      >
+        <a-entity
+          id="camera"
+          camera
+          position="0 1.6 0"
+          wasd-controls
+          look-controls="pointerLockEnabled: false"
+        >
+          <a-entity
+            id="weapon"
+            gltf-model="#shooter"
+            position="0 -4.4 3"
+            rotation="0 180 0"
+            scale="0.35 1 1"
+            player-movement
+          >
+          </a-entity>
+        </a-entity>
+      </a-entity>
+
+      <!--Bullets-->
+      <a-entity bullets></a-entity>
+
+      <!--Ground-->
+      <!-- <a-plane
+        id="ground"
+        repeat="5 5"
+        position="0 1 0"
+        rotation="-90 0 0"
+        height="200"
+        width="200"
+        color="#FBF2D4"
+        static-body
+        visible="true"
+      >
+      </a-plane> -->
+
+      <!--Walls-->
+      <!-- <a-box
+        color="#1469C9"
+        id="wall1"
+        position="-20 1.5 -20"
+        depth="1"
+        height="50"
+        width="10"
+        static-body
+      ></a-box>
+
+      <a-box
+        color="#1469C9"
+        id="wall2"
+        position="0 1.5 -20"
+        depth="1"
+        height="50"
+        width="10"
+        static-body
+      ></a-box>
+
+      <a-box
+        color="#1469C9"
+        id="wall3"
+        position="20 1.5 -20"
+        depth="1"
+        height="50"
+        width="10"
+        static-body
+      ></a-box>
+
+      <a-box
+        color="#1469C9"
+        id="wall4"
+        position="-10 1.5 -20"
+        depth="1"
+        height="50"
+        width="10"
+        opacity="0.5"
+      ></a-box>
+
+      <a-box
+        color="#2889DF"
+        id="wall6"
+        position="10 1.5 -20"
+        depth="1"
+        height="50"
+        width="10"
+        opacity="0.5"
+      ></a-box>
+
+      <a-box
+        color="#2889DF"
+        id="wall6"
+        position="-30 1.5 -20"
+        depth="1"
+        height="50"
+        width="10"
+        opacity="0.5"
+      ></a-box>
+
+      <a-box
+        color="#2889DF"
+        id="wall7"
+        position="30 1.5 -20"
+        depth="1"
+        height="50"
+        width="10"
+        opacity="0.5"
+      ></a-box>
+
+      <!--Boxes-->
+      <a-box
+        id="box1"
+        position="-2 1.5 -10"
+        color="tomato"
+        depth="1"
+        height="1.2"
+        width="1.2"
+        dynamic-body
+      ></a-box>
+
+      <a-box
+        id="box2"
+        position="0 1.5 -10"
+        color="tomato"
+        depth="1"
+        height="1.2"
+        width="1.2"
+        dynamic-body
+      ></a-box>
+
+      <a-box
+        id="box3"
+        position="2 1.5 -10"
+        color="tomato"
+        depth="1"
+        height="1.2"
+        width="1.2"
+        dynamic-body
+      ></a-box>
+
+      <a-box
+        id="box4"
+        position="-1 2.5 -10"
+        color="tomato"
+        depth="1"
+        height="1.2"
+        width="1.2"
+        dynamic-body
+      ></a-box>
+
+      <a-box
+        id="box5"
+        position="1 2.5 -10"
+        color="tomato"
+        depth="1"
+        height="1.2"
+        width="1.2"
+        dynamic-body
+      ></a-box>
+
+      <a-box
+        id="box6"
+        position="0 3.5 -10"
+        color="tomato"
+        depth="1"
+        height="1.2"
+        width="1.2"
+        dynamic-body
+      ></a-box>
+      -->
+      <a-entity
+        id="inst-1"
+        position="-4.5 4.2 -7"
+        text="font: mozillavr; width: 5; height:5; value: Press 'Arrow Keys' to move the player"
+      >
+      </a-entity>
+      <a-entity
+        id="inst-2"
+        position="-4.6 4.2 -7"
+        text="font: mozillavr; width: 5; height:5; value: Press 'z' to shoot bullets"
+      >
+      </a-entity>
+      <a-entity
+        id="tank-targets"
+        position="7 5 7"
+        text="font: mozillavr; width: 10; height:5; value: Shoot Tanks : "
+      >
+        <a-entity
+          id="count-tank"
+          position="3 0 0"
+          text="font: mozillavr; width: 10; height:5; value: 2"
+        >
+        </a-entity>
+      </a-entity>
+      <a-entity
+        id="life"
+        position="-2 5 -7"
+        text="font: mozillavr; width: 10; height:5; value: Player Life : "
+      >
+        <a-entity
+          id="count-life"
+          position="3 0 0"
+          text="font: mozillavr; width: 10; height:5; value: 3"
+        >
+        </a-entity>
+      </a-entity>
+      <a-entity
+        id="over"
+        position="1 1 -3"
+        text="font: mozillavr; width: 5; height:5; value: Better luck next time!"
+        visible="false"
+      ></a-entity>
+      <a-entity
+        id="win"
+        position="1.5 -3"
+        text="font: mozillavr; width: 5; height:5; value: Level Completed!"
+        visible="false"
+      ></a-entity>
+
+      <a-entity
+        class="enemy"
+        id="tank1"
+        rotation="0 90 0"
+        gltf-model="#tank"
+        position="-10 0 -15"
+        scale="0.01 0.01 0.01"
+        animation-mixer
+        static-body
+        animation="position: position; to: 10 0 -15; dur: 20000; easing: linear; loop: true; dir: alternate; "
+      ></a-entity>
+      <a-entity
+        class="enemy"
+        id="tank2"
+        rotation="0 90 0"
+        gltf-model="#tank"
+        position="-50 0 -40"
+        scale="0.01 0.01 0.01"
+        animation-mixer
+        static-body
+        animation="position: position; to: 10 0 -40; dur: 20000; easing: linear; loop: true; dir: alternate; "
+      ></a-entity>
+      <a-entity id="t-b" tank-bullet></a-entity>
+    </a-scene>
+  </body>
+</html>
